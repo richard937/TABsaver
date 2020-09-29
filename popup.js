@@ -2,6 +2,7 @@ var links = document.getElementById("link");
 
 let array = [];     // array = ['0', 1', '2', '3', '4', '5', ....];
 let len;
+const cutoffLength = 55;
 
 // get the how many tabs were open last time
 chrome.storage.sync.get("no_of_tabs", function (data) {
@@ -14,18 +15,21 @@ chrome.storage.sync.get("no_of_tabs", function (data) {
             // get the last saved urls
             chrome.storage.sync.get(array, function (data) {
                 if (!chrome.runtime.error) {
-                    console.log(data);
+                    // console.log(data);
                     for (let i = 0; i < len; i++) {
                         //console.log(data[array[i]]);
-                        let url = data[array[i]];
-                        console.log(url);
+                        let url = data[array[i]].url;
+                        let title = data[array[i]].title;
                         let link = document.createElement("a");
                         let tr = document.createElement("tr");
                         let td = document.createElement("td");
 
                         link.setAttribute("href", url);
                         link.setAttribute("target", "blank");
-                        link.innerHTML = url;
+                        if (title.length > cutoffLength)
+                            link.textContent = `${title.slice(0, cutoffLength)}...`;
+                        else
+                            link.textContent = title;
 
                         td.appendChild(link);
                         tr.appendChild(td);
@@ -42,7 +46,6 @@ chrome.storage.sync.get("no_of_tabs", function (data) {
 // get all the tabs and save
 document.getElementById("save").onclick = () => {
     //console.log("save clicked");
-    // StorageArea.clear();
     chrome.storage.sync.clear(function () {
         if (!chrome.runtime.lastError) {
 
@@ -55,12 +58,15 @@ document.getElementById("save").onclick = () => {
                 //tabs.forEach(function (tab) 
                 for (let i = 0; i < len; i++) {
                     let tab = tabs[i];
-                    let url = tab.url;
                     let key = i.toString();
 
                     let obj = {
-                        [key]: url,
+                        [key]: {
+                            url: tab.url,
+                            title: tab.title,
+                        },
                     }
+                    // console.log(obj);
                     chrome.storage.sync.set(obj, () => {
                         if (!chrome.runtime.error)
                             console.log("saved it !!");
@@ -77,6 +83,7 @@ document.getElementById("show").onclick = () => {
     chrome.tabs.query({}, function (tabs) {
 
         tabs.forEach(function (tab) {
+            let title = tab.title;
             let url = tab.url;
             let link = document.createElement("a");
             let tr = document.createElement("tr");
@@ -84,7 +91,10 @@ document.getElementById("show").onclick = () => {
 
             link.setAttribute("href", url);
             link.setAttribute("target", "blank");
-            link.innerHTML = url;
+            if (title.length > cutoffLength)
+                link.textContent = `${title.slice(0, cutoffLength)}...`;
+            else
+                link.textContent = title;
 
             td.appendChild(link);
             tr.appendChild(td);
@@ -105,6 +115,7 @@ document.getElementById("remove").onclick = () => {
     });
     links.setAttribute("style", "display: none;");
 }
+
 
 // chrome.windows.getAll({ populate: true }, function (windows) {
 //     windows.forEach(function (window) {
