@@ -9,3 +9,7 @@
 - Fork and Clone the repo.
 - Go to `chrome://extensions/` and turn on the Developer mode.
 - There will be a Load unpack option, just upload the whole folder.
+<p align="center">
+<img src="https://user-images.githubusercontent.com/42942897/94564578-bf667180-0285-11eb-89d7-1c032aa49de4.png" width="50%" height="50%"></img> 
+</p>
+
