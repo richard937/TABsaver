@@ -4,3 +4,8 @@
 <p align="center">
 <img src="https://user-images.githubusercontent.com/42942897/94526786-ae047180-0253-11eb-95e5-6539c74414cb.png" width="50%" height="50%"></img> 
 </p>
+
+## How to use
+- Fork and Clone the repo.
+- Go to `chrome://extensions/` and turn on the Developer mode.
+- There will be a Load unpack option, just upload the whole folder.
